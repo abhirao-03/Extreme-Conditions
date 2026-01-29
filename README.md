@@ -1,2 +1,2 @@
 # Extreme-Conditions
-Exploration of Simulating Matter Under Extreme Conditions
+Simulating Matter Under Extreme Conditions
