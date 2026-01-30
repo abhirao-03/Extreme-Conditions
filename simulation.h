@@ -98,6 +98,7 @@ class Simulation
                 m_eSlopeLimiter(eSlopeLimiter)
                 {
                     m_dDeltaX = (m_dXEnd - m_dXStart) / m_iXNumPoints;
+                    m_dDeltaY = (m_dYEnd - m_dYStart) / m_iYNumPoints;
                     m_dDeltaT = m_dRelaxation * m_dDeltaX;
     
                     m_vec_dU.resize(m_iNumGhostCells + m_iYNumPoints);
