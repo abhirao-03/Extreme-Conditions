@@ -1,11 +1,11 @@
 #include "simulation.h"
-
-vec4 Simulation::m_GetSlopeLimitingR(const int& t_iCellValue)
+    
+vec4 Simulation::m_GetSlopeLimitingR(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right)
     {
         const double eps = 1e-12;
 
-        vec4 l_dNumerator = m_vec_dU[t_iCellValue] - m_vec_dU[t_iCellValue - 1];
-        vec4 l_dDenominator = m_vec_dU[t_iCellValue + 1]  - m_vec_dU[t_iCellValue];
+        vec4 l_dNumerator = U_Center - U_Left;
+        vec4 l_dDenominator = U_Right  - U_Center;
 
         vec4 l_vec3SlopeLimitingR;
 
@@ -25,9 +25,9 @@ vec4 Simulation::m_GetSlopeLimitingR(const int& t_iCellValue)
 
     }
 
-vec4 Simulation::m_SL_Superbee(const int& l_iIterValue)
+vec4 Simulation::m_SL_Superbee(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right)
     {
-        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
+        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(U_Left, U_Center, U_Right);
         vec4 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
         vec4 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
 
@@ -55,10 +55,10 @@ vec4 Simulation::m_SL_Superbee(const int& l_iIterValue)
 
         return l_vResults;
     }
-
-vec4 Simulation::m_SL_VanLeer(const int& l_iIterValue)
+    
+vec4 Simulation::m_SL_VanLeer(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right)
     {
-        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
+        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(U_Left, U_Center, U_Right);
         vec4 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
         vec4 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
 
@@ -79,9 +79,9 @@ vec4 Simulation::m_SL_VanLeer(const int& l_iIterValue)
         return l_vResults;
     }
 
-vec4 Simulation::m_SL_VanAlbada(const int& l_iIterValue)
+vec4 Simulation::m_SL_VanAlbada(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right)
     {
-        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
+        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(U_Left, U_Center, U_Right);
         vec4 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
         vec4 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
 
@@ -103,9 +103,9 @@ vec4 Simulation::m_SL_VanAlbada(const int& l_iIterValue)
         return l_vResults;
     }
 
-vec4 Simulation::m_SL_Minbee(const int& l_iIterValue)
+vec4 Simulation::m_SL_Minbee(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right)
     {
-        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
+        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(U_Left, U_Center, U_Right);
         vec4 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
         vec4 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
 

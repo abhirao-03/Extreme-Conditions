@@ -1,25 +1,12 @@
-#include <iostream>
 #include "simulation.h"
-
-void Simulation::m_GetU()
-    {
-        for (int i = 0; i < m_vec_dU.size(); i++)
-            {
-                double x = m_dXStart + (i - 0.5) * m_dDeltaX;
-                std::cout << x << ' ' << m_vec_dU[i] << std::endl;
-            }
-    }
 
 vec4 Simulation::m_GetPrimitives(const vec4& f_vec3_U)
     {
-
         double density = f_vec3_U[0];
         double x_velocity = f_vec3_U[1] / density;
         double y_velocity = f_vec3_U[2] / density;
         
-        double velocity = std::pow(x_velocity*x_velocity + y_velocity*y_velocity, 0.5);
-        
-        double pressure = (m_dGamma - 1) * (f_vec3_U[2] - (1.0/2.0)*(density * (pow(velocity, 2.0))));
+        double pressure = (m_dGamma - 1) * (f_vec3_U[3] - (1.0/2.0)*(density * (x_velocity*x_velocity + y_velocity*y_velocity)));
 
         return vec4(density, x_velocity, y_velocity, pressure);
     }
@@ -34,9 +21,7 @@ vec4 Simulation::m_GetConserved(const vec4& f_vec3_P)
     double x_momentum = density * x_velocity;
     double y_momentum = density * y_velocity;
     
-    double velocity = std::pow(x_velocity*x_velocity + y_velocity*y_velocity, 0.5);
-    
-    double energy = pressure / (m_dGamma - 1.0) + 0.5 * density * velocity*velocity;
+    double energy = pressure / (m_dGamma - 1.0) + 0.5 * density * (x_velocity*x_velocity + y_velocity*y_velocity);
 
     return vec4(density, x_momentum, y_momentum, energy);
 }

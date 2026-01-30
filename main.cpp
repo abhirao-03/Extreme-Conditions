@@ -20,9 +20,5 @@ int main(){
     Simulation::InitialCondition u_eInitialCondition = static_cast<Simulation::InitialCondition>(u_iInitialCondition);
     Simulation::SlopeLimiter u_eSlopeLimiter = Simulation::SlopeLimiter::MINBEE;
 
-    Simulation EulerEquations = Simulation(u_X0, u_X1, u_T0, u_TEND, u_RELAXATION, u_GAMMA, u_NUMPOINTS, u_NUMGHOST, u_eInitialCondition, u_eSlopeLimiter);
-
-    EulerEquations.Evolve();
-
     return 0;
 }
