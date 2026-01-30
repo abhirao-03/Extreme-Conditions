@@ -68,3 +68,62 @@ vec4 Simulation::m_vYFlux(const vec4& f_vec4_U)
 
         return vec4(h_dFirstTerm, h_dSecondTerm, h_dThirdTerm, h_dFourthTerm);
     };
+
+void Simulation::SetBoundaryConditions()
+{
+    int ghost = m_iNumGhostCells / 2;
+    
+    for (int j = ghost; j < m_iYNumPoints + ghost; j++)
+        {
+            // Left boundary (x = xStart)
+            for (int g = 0; g < ghost; g++)
+                {
+                    m_vec_dU[j][g] = m_vec_dU[j][ghost];
+                }
+                
+            // Right boundary (x = xEnd)
+            for (int g = 0; g < ghost; g++)
+                {
+                    m_vec_dU[j][m_iXNumPoints + ghost + g] = m_vec_dU[j][m_iXNumPoints + ghost - 1];  // Outflow
+                }
+        }
+    
+    for (int i = 0; i < m_iXNumPoints + m_iNumGhostCells; i++)
+        {
+            // Bottom boundary (y = yStart)
+            for (int g = 0; g < ghost; g++)
+                {
+                    m_vec_dU[g][i] = m_vec_dU[ghost][i];
+                }
+            
+            // Top boundary (y = yEnd)
+            for (int g = 0; g < ghost; g++)
+                {
+                    m_vec_dU[m_iYNumPoints + ghost + g][i] = m_vec_dU[m_iYNumPoints + ghost - 1][i];
+                }
+        }
+}
+
+void Simulation::OutputToFile(std::ofstream& outputFile, const int& timestep, const double& time)
+    {
+        for (int j = m_iNumGhostCells / 2; j < m_iYNumPoints + m_iNumGhostCells / 2; j++)
+            {
+                for (int i = m_iNumGhostCells / 2; i < m_iXNumPoints + m_iNumGhostCells / 2; i++)
+                    {
+                        double x = m_dXStart + (i + 0.5) * m_dDeltaX;
+                        double y = m_dYStart + (j + 0.5) * m_dDeltaY;
+                        
+                        vec4 U = m_vec_dU[j][i];
+                        
+                        outputFile << timestep << ","
+                                << time << ","
+                                << x << ","
+                                << y << ","
+                                << U[0] << ","  // density
+                                << U[1] << ","  // x-momentum
+                                << U[2] << ","  // y-momentum
+                                << U[3]         // energy
+                                << std::endl;
+                    }
+            }
+    }

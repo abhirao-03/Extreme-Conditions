@@ -23,9 +23,9 @@ void Simulation::m_ReconstructData(int f_iDirection)
         m_vec_LeftReconstructed = m_vec_dU;
         m_vec_RightReconstructed = m_vec_dU;
 
-        for (int j = m_iNumGhostCells/2; j < m_iYNumPoints - m_iNumGhostCells/2; j++)
+        for (int j = m_iNumGhostCells/2; j < m_iYNumPoints + m_iNumGhostCells/2; j++)
             {
-                for (int i = m_iNumGhostCells/2; i < m_iXNumPoints - m_iNumGhostCells/2; i++)
+                for (int i = m_iNumGhostCells/2; i < m_iXNumPoints + m_iNumGhostCells/2; i++)
                     {
                         vec4 U_Left, U_Center, U_Right;
                         

@@ -151,6 +151,7 @@ class Simulation
             vec4 m_vXFlux(const vec4& f_vec4_U);
             vec4 m_vYFlux(const vec4& f_vec4_U);
             
+            void OutputToFile(std::ofstream& outputFile, const int& timestep, const double& time);
             void SetBoundaryConditions();
             void SetTimeStep();
             void Evolve();

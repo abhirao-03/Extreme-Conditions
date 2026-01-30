@@ -56,7 +56,7 @@ void Simulation::m_EvolveHalfTimeStep(int f_iDirection)
     
         for (int j = 0; j < m_iYNumPoints + m_iNumGhostCells; j++)
             {
-                for (int i = 0; m_iXNumPoints + m_iNumGhostCells; i++)
+                for (int i = 0; i < m_iXNumPoints + m_iNumGhostCells; i++)
                     {
                         if (f_iDirection == 0)
                             {
@@ -88,21 +88,26 @@ void Simulation::m_EvolveHalfTimeStep(int f_iDirection)
     
 void Simulation::Evolve()
     {
+        double t = m_dTimeStart;
+        int timestep = 0;
+        
+        std::ofstream outputFile("simulation_output.csv");
+        outputFile << "timestep,time,x,y,density,x_momentum,y_momentum,energy" << std::endl;
+        outputFile.precision(10);
+        
         SetInitialCondition();
         SetLimitingFunction();
         SetBoundaryConditions();
         SetTimeStep();
         
-        double t = m_dTimeStart;
+        OutputToFile(outputFile, timestep, t);
     
         do
             {
                 t += m_dDeltaT;
+                timestep++;
                 
                 SetBoundaryConditions();
-                
-                std::vector<std::vector<vec4>> x_Direction = m_vec_dU;
-                std::vector<std::vector<vec4>> FULL_Direction = m_vec_dU;
                 
                 m_ReconstructData(0);
                 m_EvolveHalfTimeStep(0);
@@ -111,9 +116,11 @@ void Simulation::Evolve()
                     {
                         for (int i = m_iNumGhostCells/2; i < m_iXNumPoints + m_iNumGhostCells/2; i++)
                             {
-                                x_Direction[j][i] = m_vec_dU[j][i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[j][i] - m_vec_dFluxesReconstructed[j][i-1]);
+                                m_vec_dUNext[j][i] = m_vec_dU[j][i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[j][i] - m_vec_dFluxesReconstructed[j][i-1]);
                             }
                     }
+                
+                SetBoundaryConditions();
                 
                 m_ReconstructData(1);
                 m_EvolveHalfTimeStep(1);
@@ -122,15 +129,20 @@ void Simulation::Evolve()
                     {
                         for (int i = m_iNumGhostCells/2; i < m_iXNumPoints + m_iNumGhostCells/2; i++)
                             {
-                                FULL_Direction[j][i] = x_Direction[j][i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[j][i] - m_vec_dFluxesReconstructed[j - 1][i]);
+                                m_vec_dUNext[j][i] = m_vec_dU[j][i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[j][i] - m_vec_dFluxesReconstructed[j - 1][i]);
                             }
                     }
                 
-                std::cout << "\n\n";
+                OutputToFile(outputFile, timestep, t);
+                
+                std::cout << "Time: " << t << " / " << m_dTimeEnd << "\n";
 
-                m_vec_dU = FULL_Direction;
+                m_vec_dU = m_vec_dUNext;
                 
                 SetTimeStep();
 
             } while (t < m_dTimeEnd);
+        
+        outputFile.close();
+        std::cout << "\nSimulation complete! Output written to simulation_output.csv" << std::endl;
     }
