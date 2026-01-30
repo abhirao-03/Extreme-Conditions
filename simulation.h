@@ -122,186 +122,36 @@ class Simulation
                         }
                 }
     
-            // void InitialOne(std::vector<vec4>& vec_dU);
-            // void InitialTwo(std::vector<vec4>& vec_dU);
-            // void InitialThree(std::vector<vec4>& vec_dU);
-            // void InitialFour(std::vector<vec4>& vec_dU);
-    
-            // void ToroInitialOne(std::vector<vec4>& vec_dU);
-            // void ToroInitialTwo(std::vector<vec4>& vec_dU);
-            // void ToroInitialThree(std::vector<vec4>& vec_dU);
-            // void ToroInitialFour(std::vector<vec4>& vec_dU);
-            // void ToroInitialFive(std::vector<vec4>& vec_dU);
-    
-            // void InitialSineWave(std::vector<vec4>& vec_dU);
-            
-                
-            // void SetInitialCondition()
-            //     {
-            //         switch (m_eInitialCondition)
-            //             {
-            //                 case InitialCondition::INITIAL_ONE:
-            //                     InitialOne(m_vec_dU);
-            //                     break;
-    
-            //                 case InitialCondition::INITIAL_TWO:
-            //                     InitialTwo(m_vec_dU);
-            //                     break;
-    
-            //                 case InitialCondition::INITIAL_THREE:
-            //                     InitialThree(m_vec_dU);
-            //                     break;
-    
-            //                 case InitialCondition::INITIAL_FOUR:
-            //                     InitialFour(m_vec_dU);
-            //                     break;
-    
-            //                 case InitialCondition::TORO_INIT_ONE:
-            //                     m_dTimeEnd = 0.25;
-            //                     ToroInitialOne(m_vec_dU);
-            //                     break;
-    
-            //                 case InitialCondition::TORO_INIT_TWO:
-            //                     m_dTimeEnd = 0.15;
-            //                     ToroInitialTwo(m_vec_dU);
-            //                     break;
-    
-            //                 case InitialCondition::TORO_INIT_THREE:
-            //                     m_dTimeEnd = 0.012;
-            //                     ToroInitialThree(m_vec_dU);
-            //                     break;
-    
-            //                 case InitialCondition::TORO_INIT_FOUR:
-            //                     m_dTimeEnd = 0.035;
-            //                     ToroInitialFour(m_vec_dU);
-            //                     break;
-    
-            //                 case InitialCondition::TORO_INIT_FIVE:
-            //                     m_dTimeEnd = 0.035;
-            //                     ToroInitialFive(m_vec_dU);
-            //                     break;
-    
-            //                 case InitialCondition::SINE_WAVE:
-            //                     m_dTimeEnd = 1.0;
-            //                     InitialSineWave(m_vec_dU);
-            //                     break;
-    
-            //             }
-            //     }
+            void InitialOne(std::vector<std::vector<vec4>>& vec_dU);
+            void InitialTwo(std::vector<std::vector<vec4>>& vec_dU);
+            void InitialThree(std::vector<std::vector<vec4>>& vec_dU);
+            void InitialFour(std::vector<std::vector<vec4>>& vec_dU);
+            void ToroInitialOne(std::vector<std::vector<vec4>>& vec_dU);
+            void ToroInitialTwo(std::vector<std::vector<vec4>>& vec_dU);
+            void ToroInitialThree(std::vector<std::vector<vec4>>& vec_dU);
+            void ToroInitialFour(std::vector<std::vector<vec4>>& vec_dU);
+            void ToroInitialFive(std::vector<std::vector<vec4>>& vec_dU);
+            void InitialSineWave(std::vector<std::vector<vec4>>& vec_dU);
+            void SetInitialCondition();
     
             vec4 m_SL_Superbee(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right);
             vec4 m_SL_VanLeer(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right);
             vec4 m_SL_VanAlbada(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right);
             vec4 m_SL_Minbee(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right);
-
             vec4 m_GetSlopeLimitingR(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right);
             vec4 m_GetSlopeMeasure(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right);
-    
             void m_ReconstructData(int f_iDirection);
             void m_GetReconstructedFluxes(int f_iDirection);
             void m_EvolveHalfTimeStep(int f_iDirection);
-            
+            void SetLimitingFunction();
             
             double m_GetEnergy(const vec4& f_vec4_P);
             vec4 m_GetPrimitives(const vec4& f_vec4_U);
             vec4 m_GetConserved(const vec4& f_vec4_P);
+            vec4 m_vXFlux(const vec4& f_vec4_U);
+            vec4 m_vYFlux(const vec4& f_vec4_U);
             
-            vec4 m_vXFlux(const vec4& f_vec4_U)
-                {
-                    vec4 h_dPrimitve = m_GetPrimitives(f_vec4_U);
-                    double h_dEnergy = m_GetEnergy(h_dPrimitve);
-    
-                    double& h_dDensity   = h_dPrimitve[0];
-                    double& h_dXVelocity = h_dPrimitve[1];
-                    double& h_dYVelocity = h_dPrimitve[2];
-                    double& h_dPressure  = h_dPrimitve[3];
-                    
-                    double h_dFirstTerm  = h_dDensity*h_dXVelocity;
-                    double h_dSecondTerm = h_dDensity*h_dXVelocity*h_dXVelocity + h_dPressure;
-                    double h_dThirdTerm  = h_dDensity*h_dXVelocity*h_dYVelocity;
-                    double h_dFourthTerm = (h_dEnergy + h_dPressure)*h_dXVelocity ;
-    
-                    return vec4(h_dFirstTerm, h_dSecondTerm, h_dThirdTerm, h_dFourthTerm);
-                };
-                
-            vec4 m_vYFlux(const vec4& f_vec4_U)
-                {
-                    vec4 h_dPrimitve = m_GetPrimitives(f_vec4_U);
-                    double h_dEnergy = m_GetEnergy(h_dPrimitve);
-    
-                    double& h_dDensity   = h_dPrimitve[0];
-                    double& h_dXVelocity = h_dPrimitve[1];
-                    double& h_dYVelocity = h_dPrimitve[2];
-                    double& h_dPressure  = h_dPrimitve[3];
-                    
-                    double h_dFirstTerm  = h_dDensity*h_dXVelocity;
-                    double h_dSecondTerm = h_dDensity*h_dXVelocity*h_dYVelocity;
-                    double h_dThirdTerm  = h_dDensity*h_dYVelocity*h_dYVelocity + h_dPressure;
-                    double h_dFourthTerm = (h_dEnergy + h_dPressure)*h_dYVelocity ;
-    
-                    return vec4(h_dFirstTerm, h_dSecondTerm, h_dThirdTerm, h_dFourthTerm);
-                };
-    
-            void SetTimeStep()
-                {
-                    double f_dMaxInformationSpeed = 0.0;
-                    
-                    for (int i = 1; i < m_vec_dU.size() - 1; i++)
-                        {
-                            for (int j = 1; i < m_vec_dU[i].size() - 1; j++)
-                                {
-                                    vec4 l_vec4_Primitive = m_GetPrimitives(m_vec_dU[i][j]);
-                                    double l_dDensity  = l_vec4_Primitive[0];
-                                    double l_dVelocity = l_vec4_Primitive[1];
-                                    double l_dPressure = l_vec4_Primitive[2];
-            
-                                    double l_dSoundSpeed = std::sqrt(m_dGamma * l_dPressure / l_dDensity);
-            
-                                    double l_dCurrentMax = std::abs(l_dVelocity) + l_dSoundSpeed;
-            
-                                    if (l_dCurrentMax > f_dMaxInformationSpeed)
-                                        {
-                                            f_dMaxInformationSpeed = l_dCurrentMax;
-                                        }
-                                };
-                          }      
-
-                    if (f_dMaxInformationSpeed > 0.0)
-                        {
-                            m_dDeltaT = m_dRelaxation * m_dDeltaX / f_dMaxInformationSpeed;
-                        }
-                    else 
-                        {
-                            m_dDeltaT = 1e-4;
-                        }
-                }
-    
-            void SetLimitingFunction()
-                {
-                    switch (m_eSlopeLimiter)
-                        {
-                            case SlopeLimiter::SUPERBEE:
-                                m_LimitingFunction = &Simulation::m_SL_Superbee;
-                                break;
-    
-                            case SlopeLimiter::VAN_LEER:
-                                m_LimitingFunction = &Simulation::m_SL_VanLeer;
-                                break;
-    
-                            case SlopeLimiter::VAN_ALBADA:
-                                m_LimitingFunction = &Simulation::m_SL_VanAlbada;
-                                break;
-    
-                            case SlopeLimiter::MINBEE:
-                                m_LimitingFunction = &Simulation::m_SL_Minbee;
-                                break;
-    
-                            default:
-                                m_LimitingFunction = &Simulation::m_SL_Minbee;
-                                break;
-                        }
-                }
-    
             void SetBoundaryConditions();
+            void SetTimeStep();
             void Evolve();
 };

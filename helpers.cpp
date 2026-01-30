@@ -31,3 +31,40 @@ double Simulation::m_GetEnergy(const vec4& f_vec4_P)
         double u_dVelocity = std::pow(f_vec4_P[1] * f_vec4_P[1] + f_vec4_P[2]*f_vec4_P[2], 0.5);
         return f_vec4_P[3]/(m_dGamma - 1.0) + (1.0/2.0) * (f_vec4_P[0]) * (pow(u_dVelocity, 2.0));
     }
+
+
+vec4 Simulation::m_vXFlux(const vec4& f_vec4_U)
+    {
+        vec4 h_dPrimitve = m_GetPrimitives(f_vec4_U);
+        double h_dEnergy = m_GetEnergy(h_dPrimitve);
+
+        double& h_dDensity   = h_dPrimitve[0];
+        double& h_dXVelocity = h_dPrimitve[1];
+        double& h_dYVelocity = h_dPrimitve[2];
+        double& h_dPressure  = h_dPrimitve[3];
+        
+        double h_dFirstTerm  = h_dDensity*h_dXVelocity;
+        double h_dSecondTerm = h_dDensity*h_dXVelocity*h_dXVelocity + h_dPressure;
+        double h_dThirdTerm  = h_dDensity*h_dXVelocity*h_dYVelocity;
+        double h_dFourthTerm = (h_dEnergy + h_dPressure)*h_dXVelocity ;
+
+        return vec4(h_dFirstTerm, h_dSecondTerm, h_dThirdTerm, h_dFourthTerm);
+    };
+                
+vec4 Simulation::m_vYFlux(const vec4& f_vec4_U)
+    {
+        vec4 h_dPrimitve = m_GetPrimitives(f_vec4_U);
+        double h_dEnergy = m_GetEnergy(h_dPrimitve);
+
+        double& h_dDensity   = h_dPrimitve[0];
+        double& h_dXVelocity = h_dPrimitve[1];
+        double& h_dYVelocity = h_dPrimitve[2];
+        double& h_dPressure  = h_dPrimitve[3];
+        
+        double h_dFirstTerm  = h_dDensity*h_dXVelocity;
+        double h_dSecondTerm = h_dDensity*h_dXVelocity*h_dYVelocity;
+        double h_dThirdTerm  = h_dDensity*h_dYVelocity*h_dYVelocity + h_dPressure;
+        double h_dFourthTerm = (h_dEnergy + h_dPressure)*h_dYVelocity ;
+
+        return vec4(h_dFirstTerm, h_dSecondTerm, h_dThirdTerm, h_dFourthTerm);
+    };

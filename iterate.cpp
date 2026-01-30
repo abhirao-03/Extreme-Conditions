@@ -1,6 +1,43 @@
 #include <iostream>
+#include <vector>
 #include "simulation.h"
 
+void Simulation::SetTimeStep()
+    {
+        double f_dMaxInformationSpeed = 0.0;
+        
+        for (int i = 1; i < m_vec_dU.size() - 1; i++)
+            {
+                for (int j = 1; i < m_vec_dU[i].size() - 1; j++)
+                    {
+                        vec4 l_vec4_Primitive = m_GetPrimitives(m_vec_dU[i][j]);
+                        
+                        double l_dDensity  = l_vec4_Primitive[0];
+                        double l_dXVelocity = l_vec4_Primitive[1];
+                        double l_dYVelocity = l_vec4_Primitive[2];
+                        double l_dPressure = l_vec4_Primitive[3];
+
+                        double l_dSoundSpeed = std::sqrt(m_dGamma * l_dPressure / l_dDensity);
+
+                        double l_dCurrentMax = std::abs(std::max(l_dXVelocity, l_dYVelocity)) + l_dSoundSpeed;
+
+                        if (l_dCurrentMax > f_dMaxInformationSpeed)
+                            {
+                                f_dMaxInformationSpeed = l_dCurrentMax;
+                            }
+                    };
+            }
+
+        if (f_dMaxInformationSpeed > 0.0)
+            {
+                m_dDeltaT = m_dRelaxation * m_dDeltaX / f_dMaxInformationSpeed;
+            }
+        else 
+            {
+                m_dDeltaT = 1e-4;
+            }
+    }
+    
 void Simulation::m_EvolveHalfTimeStep(int f_iDirection)
     {
         FluxFunction t_CurrentFluxFunction;
@@ -57,30 +94,41 @@ void Simulation::Evolve()
         SetTimeStep();
         
         double t = m_dTimeStart;
-        
+    
         do
             {
                 t += m_dDeltaT;
                 
                 SetBoundaryConditions();
-                m_ReconstructData();
-                m_EvolveHalfTimeStep();
-                m_GetReconstructedFluxes();
                 
-                std::cout << "# time = " << t << std::endl;
-
-                for (int i = 1; i < m_vec_dU.size() - 1; i++)
+                std::vector<std::vector<vec4>> x_Direction = m_vec_dU;
+                std::vector<std::vector<vec4>> FULL_Direction = m_vec_dU;
+                
+                m_ReconstructData(0);
+                m_EvolveHalfTimeStep(0);
+                m_GetReconstructedFluxes(0);
+                for (int j = m_iNumGhostCells/2; j < m_iYNumPoints + m_iNumGhostCells/2; j++)
                     {
-                        double x = m_dXStart + (i - m_iNumGhostCells + 0.5) * m_dDeltaX;
-                        
-                        m_vec_dUNext[i] = m_vec_dU[i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[i] - m_vec_dFluxesReconstructed[i-1]);
-                        
-                        std::cout << x << ' ' << m_vec_dUNext[i] << std::endl;
+                        for (int i = m_iNumGhostCells/2; i < m_iXNumPoints + m_iNumGhostCells/2; i++)
+                            {
+                                x_Direction[j][i] = m_vec_dU[j][i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[j][i] - m_vec_dFluxesReconstructed[j][i-1]);
+                            }
                     }
-
+                
+                m_ReconstructData(1);
+                m_EvolveHalfTimeStep(1);
+                m_GetReconstructedFluxes(1);
+                for (int j = m_iNumGhostCells/2; j < m_iYNumPoints + m_iNumGhostCells/2; j++)
+                    {
+                        for (int i = m_iNumGhostCells/2; i < m_iXNumPoints + m_iNumGhostCells/2; i++)
+                            {
+                                FULL_Direction[j][i] = x_Direction[j][i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[j][i] - m_vec_dFluxesReconstructed[j - 1][i]);
+                            }
+                    }
+                
                 std::cout << "\n\n";
 
-                m_vec_dU = m_vec_dUNext;
+                m_vec_dU = FULL_Direction;
                 
                 SetTimeStep();
 

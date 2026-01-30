@@ -58,7 +58,6 @@ void Simulation::m_ReconstructData(int f_iDirection)
                         m_vec_RightReconstructed[j][i] = m_GetConserved(m_vec_RightReconstructed[j][i]);
                     }
             }
-
         m_vec_dU = t_vConserved;
     }
     

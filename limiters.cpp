@@ -1,5 +1,31 @@
 #include "simulation.h"
-    
+
+void Simulation::SetLimitingFunction()
+    {
+        switch (m_eSlopeLimiter)
+            {
+                case SlopeLimiter::SUPERBEE:
+                    m_LimitingFunction = &Simulation::m_SL_Superbee;
+                    break;
+
+                case SlopeLimiter::VAN_LEER:
+                    m_LimitingFunction = &Simulation::m_SL_VanLeer;
+                    break;
+
+                case SlopeLimiter::VAN_ALBADA:
+                    m_LimitingFunction = &Simulation::m_SL_VanAlbada;
+                    break;
+
+                case SlopeLimiter::MINBEE:
+                    m_LimitingFunction = &Simulation::m_SL_Minbee;
+                    break;
+
+                default:
+                    m_LimitingFunction = &Simulation::m_SL_Minbee;
+                    break;
+            }
+    }
+
 vec4 Simulation::m_GetSlopeLimitingR(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right)
     {
         const double eps = 1e-12;
