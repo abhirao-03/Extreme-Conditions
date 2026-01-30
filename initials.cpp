@@ -153,12 +153,20 @@ void Simulation::InitialFour(std::vector<std::vector<vec4>>& vec_dU)
 
         for (std::vector<vec4>& l_vec4XDirection : vec_dU)
             {
-                for (int i = 0; i < vec_dU.size(); i++)
+                /**
+                * Note: I've changed below loop condition as it seemed wrong. InitialFour and ToroInitialOne...Five as well as
+                * InitialSineWave used vec_dU.size() for the bound in the inner/X loop.. -> I changed it to use l_vec4XDirection.size()
+                * since the latter would mean not all x cells get initialised? Experimentally, this seems to eliminate NaN's in affected
+                * simulated cases
+                * 
+                * - Joseph
+                */
+                for (int i = 0; i < l_vec4XDirection.size(); i++)
                     {
                         vec4& l_vec4ConservedVars = l_vec4XDirection[i];
-        
+
                         double l_dXVal = m_dXStart + m_dDeltaX * (i - 0.5);
-        
+
                         if (l_dXVal <= l_dDiscontinuityLocation)
                             {
                                 l_vec4ConservedVars[0] = l_dLeftDensity;
@@ -194,7 +202,7 @@ void Simulation::ToroInitialOne(std::vector<std::vector<vec4>>& vec_dU)
 
         for (std::vector<vec4>& l_vec4XDirection : vec_dU)
             {
-                for (int i = 0; i < vec_dU.size(); i++)
+                for (int i = 0; i < l_vec4XDirection.size(); i++)
                     {
                         vec4& l_vec4ConservedVars = l_vec4XDirection[i];
         
@@ -234,7 +242,7 @@ void Simulation::ToroInitialTwo(std::vector<std::vector<vec4>>& vec_dU)
         double l_dDiscontinuityLocation = 0.5;
         for (std::vector<vec4>& l_vec4XDirection : vec_dU)
             {
-                for (int i = 0; i < vec_dU.size(); i++)
+                for (int i = 0; i < l_vec4XDirection.size(); i++)
                     {
                         vec4& l_vec4ConservedVars = l_vec4XDirection[i];
         
@@ -275,7 +283,7 @@ void Simulation::ToroInitialThree(std::vector<std::vector<vec4>>& vec_dU)
         double l_dDiscontinuityLocation = 0.5;
         for (std::vector<vec4>& l_vec4XDirection : vec_dU)
             {
-                for (int i = 0; i < vec_dU.size(); i++)
+                for (int i = 0; i < l_vec4XDirection.size(); i++)
                     {
                         vec4& l_vec4ConservedVars = l_vec4XDirection[i];
         
@@ -317,7 +325,7 @@ void Simulation::ToroInitialFour(std::vector<std::vector<vec4>>& vec_dU)
         
         for (std::vector<vec4>& l_vec4XDirection : vec_dU)
                     {
-                        for (int i = 0; i < vec_dU.size(); i++)
+                        for (int i = 0; i < l_vec4XDirection.size(); i++)
                             {
                                 vec4& l_vec4ConservedVars = l_vec4XDirection[i];
                 
@@ -359,7 +367,7 @@ void Simulation::ToroInitialFive(std::vector<std::vector<vec4>>& vec_dU)
 
         for (std::vector<vec4>& l_vec4XDirection : vec_dU)
             {
-                for (int i = 0; i < vec_dU.size(); i++)
+                for (int i = 0; i < l_vec4XDirection.size(); i++)
                     {
                         vec4& l_vec4ConservedVars = l_vec4XDirection[i];
         
@@ -392,7 +400,7 @@ void Simulation::InitialSineWave(std::vector<std::vector<vec4>>& vec_dU)
 
     for (std::vector<vec4>& l_vec4XDirection : vec_dU)
         {
-            for (int i = 0; i < vec_dU.size(); i++)
+            for (int i = 0; i < l_vec4XDirection.size(); i++)
                 {
                     vec4& l_vec4ConservedVars = l_vec4XDirection[i];
             
