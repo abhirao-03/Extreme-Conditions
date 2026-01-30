@@ -1,13 +1,13 @@
 #include "simulation.h"
 
-vec3 Simulation::m_GetSlopeLimitingR(const int& t_iCellValue)
+vec4 Simulation::m_GetSlopeLimitingR(const int& t_iCellValue)
     {
         const double eps = 1e-12;
 
-        vec3 l_dNumerator = m_vec_dU[t_iCellValue] - m_vec_dU[t_iCellValue - 1];
-        vec3 l_dDenominator = m_vec_dU[t_iCellValue + 1]  - m_vec_dU[t_iCellValue];
+        vec4 l_dNumerator = m_vec_dU[t_iCellValue] - m_vec_dU[t_iCellValue - 1];
+        vec4 l_dDenominator = m_vec_dU[t_iCellValue + 1]  - m_vec_dU[t_iCellValue];
 
-        vec3 l_vec3SlopeLimitingR;
+        vec4 l_vec3SlopeLimitingR;
 
         for (int k = 0; k < l_dNumerator.size(); ++k)
             {
@@ -25,13 +25,13 @@ vec3 Simulation::m_GetSlopeLimitingR(const int& t_iCellValue)
 
     }
 
-vec3 Simulation::m_SL_Superbee(const int& l_iIterValue)
+vec4 Simulation::m_SL_Superbee(const int& l_iIterValue)
     {
-        vec3 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
-        vec3 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
-        vec3 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
+        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
+        vec4 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
+        vec4 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
 
-        vec3 l_vResults = vec3();
+        vec4 l_vResults = vec4();
 
         for (int i = 0; i < l_dSlopeLimitingR.size(); i++)
             {
@@ -56,13 +56,13 @@ vec3 Simulation::m_SL_Superbee(const int& l_iIterValue)
         return l_vResults;
     }
 
-vec3 Simulation::m_SL_VanLeer(const int& l_iIterValue)
+vec4 Simulation::m_SL_VanLeer(const int& l_iIterValue)
     {
-        vec3 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
-        vec3 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
-        vec3 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
+        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
+        vec4 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
+        vec4 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
 
-        vec3 l_vResults = vec3();
+        vec4 l_vResults = vec4();
 
         for (int i = 0; i < l_dSlopeLimitingR.size(); i++)
             {
@@ -79,13 +79,13 @@ vec3 Simulation::m_SL_VanLeer(const int& l_iIterValue)
         return l_vResults;
     }
 
-vec3 Simulation::m_SL_VanAlbada(const int& l_iIterValue)
+vec4 Simulation::m_SL_VanAlbada(const int& l_iIterValue)
     {
-        vec3 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
-        vec3 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
-        vec3 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
+        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
+        vec4 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
+        vec4 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
 
-        vec3 l_vResults = vec3();
+        vec4 l_vResults = vec4();
 
         for (int i = 0; i < l_dSlopeLimitingR.size(); i++)
             {
@@ -103,13 +103,13 @@ vec3 Simulation::m_SL_VanAlbada(const int& l_iIterValue)
         return l_vResults;
     }
 
-vec3 Simulation::m_SL_Minbee(const int& l_iIterValue)
+vec4 Simulation::m_SL_Minbee(const int& l_iIterValue)
     {
-        vec3 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
-        vec3 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
-        vec3 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
+        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(l_iIterValue);
+        vec4 m_dLeftSlopeLimit = (2.0 * l_dSlopeLimitingR) / (1.0 + l_dSlopeLimitingR);
+        vec4 m_dRightSlopeLimit = 2.0 / (1.0 + l_dSlopeLimitingR);
 
-        vec3 l_vResults = vec3();
+        vec4 l_vResults = vec4();
 
         for (int i = 0; i < l_dSlopeLimitingR.size(); i++)
             {

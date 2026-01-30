@@ -1,7 +1,7 @@
 #include <iostream>
 #include "simulation.h"
 
-void Simulation::GetU()
+void Simulation::m_GetU()
     {
         for (int i = 0; i < m_vec_dU.size(); i++)
             {
@@ -10,29 +10,39 @@ void Simulation::GetU()
             }
     }
 
-vec3 Simulation::m_GetPrimitives(const vec3& f_vec3_U)
+vec4 Simulation::m_GetPrimitives(const vec4& f_vec3_U)
     {
 
         double density = f_vec3_U[0];
-        double velocity = f_vec3_U[1] / density;
+        double x_velocity = f_vec3_U[1] / density;
+        double y_velocity = f_vec3_U[2] / density;
+        
+        double velocity = std::pow(x_velocity*x_velocity + y_velocity*y_velocity, 0.5);
+        
         double pressure = (m_dGamma - 1) * (f_vec3_U[2] - (1.0/2.0)*(density * (pow(velocity, 2.0))));
 
-        return vec3(density, velocity, pressure);
+        return vec4(density, x_velocity, y_velocity, pressure);
     }
 
-vec3 Simulation::m_GetConserved(const vec3& f_vec3_P)
+vec4 Simulation::m_GetConserved(const vec4& f_vec3_P)
 {
-    double rho = f_vec3_P[0];
-    double u   = f_vec3_P[1];
-    double P   = f_vec3_P[2];
+    double density    = f_vec3_P[0];
+    double x_velocity = f_vec3_P[1];
+    double y_velocity = f_vec3_P[2];
+    double pressure   = f_vec3_P[3];
 
-    double momentum = rho * u;
-    double energy = P / (m_dGamma - 1.0) + 0.5 * rho * u * u;
+    double x_momentum = density * x_velocity;
+    double y_momentum = density * y_velocity;
+    
+    double velocity = std::pow(x_velocity*x_velocity + y_velocity*y_velocity, 0.5);
+    
+    double energy = pressure / (m_dGamma - 1.0) + 0.5 * density * velocity*velocity;
 
-    return vec3(rho, momentum, energy);
+    return vec4(density, x_momentum, y_momentum, energy);
 }
 
-double Simulation::GetEnergy(const double& u_dDensity, const double& u_dVelocity, const double& u_dPressure)
+double Simulation::m_GetEnergy(const vec4& f_vec4_P)
     {
-        return u_dPressure/(m_dGamma - 1.0) + (1.0/2.0) * (u_dDensity) * (pow(u_dVelocity, 2.0));
+        double u_dVelocity = std::pow(f_vec4_P[1] * f_vec4_P[1] + f_vec4_P[2]*f_vec4_P[2], 0.5);
+        return f_vec4_P[3]/(m_dGamma - 1.0) + (1.0/2.0) * (f_vec4_P[0]) * (pow(u_dVelocity, 2.0));
     }

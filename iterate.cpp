@@ -5,13 +5,13 @@ void Simulation::m_EvolveHalfTimeStep()
     {
         for (int i = 0; i < m_vec_dU.size(); i++)
             {
-                vec3 t_dULeft = m_vec_LeftReconstructed[i];
-                vec3 t_dURight = m_vec_RightReconstructed[i];
+                vec4 t_dULeft = m_vec_LeftReconstructed[i];
+                vec4 t_dURight = m_vec_RightReconstructed[i];
                 
-                vec3 t_fFluxLext = m_EulerFluxFunction(t_dULeft);
-                vec3 t_fFluxRight = m_EulerFluxFunction(t_dURight);
+                vec4 t_fFluxLext = m_EulerFluxFunction(t_dULeft);
+                vec4 t_fFluxRight = m_EulerFluxFunction(t_dURight);
                 
-                vec3 l_vdUpdatePortion = (0.5 * m_dDeltaT / m_dDeltaX) * (t_fFluxLext - t_fFluxRight);
+                vec4 l_vdUpdatePortion = (0.5 * m_dDeltaT / m_dDeltaX) * (t_fFluxLext - t_fFluxRight);
                 
                 m_vec_LeftReconstructed[i] += l_vdUpdatePortion;
                 m_vec_RightReconstructed[i] += l_vdUpdatePortion;
