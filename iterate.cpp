@@ -8,7 +8,7 @@ void Simulation::SetTimeStep()
         
         for (int i = 1; i < m_vec_dU.size() - 1; i++)
             {
-                for (int j = 1; i < m_vec_dU[i].size() - 1; j++)
+                for (int j = 1; j < m_vec_dU[i].size() - 1; j++)
                     {
                         vec4 l_vec4_Primitive = m_GetPrimitives(m_vec_dU[i][j]);
                         
