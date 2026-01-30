@@ -90,8 +90,9 @@ void Simulation::Evolve()
     {
         double t = m_dTimeStart;
         int timestep = 0;
+        int ghost = m_iNumGhostCells / 2;
         
-        std::ofstream outputFile("simulation_output.csv");
+        std::ofstream outputFile("./simulation_output.csv");
         outputFile << "timestep,time,x,y,density,x_momentum,y_momentum,energy" << std::endl;
         outputFile.precision(10);
         
@@ -100,8 +101,27 @@ void Simulation::Evolve()
         SetBoundaryConditions();
         SetTimeStep();
         
-        OutputToFile(outputFile, timestep, t);
-    
+        for (int j = ghost; j < m_iYNumPoints + ghost; j++)
+            {
+                for (int i = ghost; i < m_iXNumPoints + ghost; i++)
+                {
+                    double x = m_dXStart + (i - ghost) * m_dDeltaX + 0.5 * m_dDeltaX;  // Cell center
+                    double y = m_dYStart + (j - ghost) * m_dDeltaY + 0.5 * m_dDeltaY;  // Cell center
+                    
+                    vec4 U = m_vec_dU[j][i];
+                    
+                    outputFile << timestep << ","
+                            << t << ","
+                            << x << ","
+                            << y << ","
+                            << U[0] << ","  // density
+                            << U[1] << ","  // x-momentum
+                            << U[2] << ","  // y-momentum
+                            << U[3]         // energy
+                            << std::endl;
+                }
+            }
+            
         do
             {
                 t += m_dDeltaT;
@@ -132,8 +152,27 @@ void Simulation::Evolve()
                                 m_vec_dUNext[j][i] = m_vec_dU[j][i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[j][i] - m_vec_dFluxesReconstructed[j - 1][i]);
                             }
                     }
-                
-                OutputToFile(outputFile, timestep, t);
+                    
+                for (int j = ghost; j < m_iYNumPoints + ghost; j++)
+                    {
+                        for (int i = ghost; i < m_iXNumPoints + ghost; i++)
+                        {
+                            double x = m_dXStart + (i - ghost) * m_dDeltaX + 0.5 * m_dDeltaX;
+                            double y = m_dYStart + (j - ghost) * m_dDeltaY + 0.5 * m_dDeltaY;
+                            
+                            vec4 U = m_vec_dU[j][i];
+                            
+                            outputFile << timestep << ","
+                                    << t << ","
+                                    << x << ","
+                                    << y << ","
+                                    << U[0] << ","  // density
+                                    << U[1] << ","  // x-momentum
+                                    << U[2] << ","  // y-momentum
+                                    << U[3]         // energy
+                                    << std::endl;
+                        }
+                    }
                 
                 std::cout << "Time: " << t << " / " << m_dTimeEnd << "\n";
 

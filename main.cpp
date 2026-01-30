@@ -37,6 +37,8 @@ int main(){
                                    u_iNUMGHOST,
                                    u_eInitialCondition,
                                    u_eSlopeLimiter);
-
+    
+    TwoDimensionalEuler.Evolve();
+    
     return 0;
 }
