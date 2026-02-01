@@ -1,10 +1,18 @@
 # Extreme-Conditions
-Simulating Matter Under Extreme Conditions
+Some initial visualisations from 2D extension of simple compressible euler equations can be seen below. These visualisations were created using `visualise.py`, a script located in the `visualisation` folder. This script was written in whole by Gemini-3-Pro as a placeholder. In the future, I plan to use VisIt/ParaView to visualise large-scale simulations.
 
-Some initial visualisations from 2D extension of simple compressible euler equations can be seen below:
-
+## Toro First Initial Condition
 ![Toro Initial One](visualisation/ToroOne.gif)
+
+## Toro Second Initial Condition
 ![Toro Initial Two](visualisation/ToroTwo.gif)
+
+## Toro Third Initial Conditions
 ![Toro Initial Three](visualisation/ToroThree.gif)
+
+## Toro Fourth Initial Condition
 ![Toro Initial Four](visualisation/ToroFour.gif)
+
+## Toro Fifth Initial Condition
+Note that while this may seem like non-conservative behaviour, this test is expected to showcase what we see below. It may seem that density arises out of nowhere but that is caused by the colour-map not showcasing the exact initial condition appropriately. In reality both regions have density, this can be verified by going to `initials.cpp` and examining the definition of `Simulation::ToroInitialFive`.
 ![Toro Initial Five](visualisation/ToroFive.gif)
