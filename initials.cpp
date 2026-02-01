@@ -50,6 +50,10 @@ void Simulation::SetInitialCondition()
                     m_dTimeEnd = 1.0;
                     InitialSineWave(m_vec_dU);
                     break;
+                
+                case InitialCondition::SPHERE_BLAST:
+                    m_dTimeEnd = 0.2;
+                    InitialSphere(m_vec_dU);
             }
     }
 
@@ -421,4 +425,76 @@ void Simulation::InitialSineWave(std::vector<std::vector<vec4>>& vec_dU)
                     l_vec4ConservedVars[3] = l_dEnergy;
                 }
         }
+}
+
+void Simulation::InitialSphere(std::vector<std::vector<vec4>>& vec_dU)
+{
+    // 1. Define States
+    double l_dInDensity   = 1.0;
+    double l_dInPressure  = 1.0;
+    double l_dInEnergy    = m_GetEnergy(vec4(l_dInDensity, 0.0, 0.0, l_dInPressure));
+
+    double l_dOutDensity  = 0.125;
+    double l_dOutPressure = 0.1;
+    double l_dOutEnergy   = m_GetEnergy(vec4(l_dOutDensity, 0.0, 0.0, l_dOutPressure));
+
+    // 2. Geometry Calculation
+    double l_dWidth  = m_dXEnd - m_dXStart;
+    double l_dHeight = m_dYEnd - m_dYStart;
+    
+    double l_dCenterX = m_dXStart + l_dWidth / 2.0;
+    double l_dCenterY = m_dYStart + l_dHeight / 2.0;
+    
+    // Radius: 20% of the smaller dimension to ensure it fits
+    double l_dRadius  = std::min(l_dWidth, l_dHeight) * 0.2;
+    double l_dRadiusSq = l_dRadius * l_dRadius;
+
+    int l_iGhostOffset = m_iNumGhostCells / 2;
+    int l_iCellsInitialized = 0; // Counter to verify we actually draw the circle
+
+    // DEBUG OUTPUT
+    std::cout << "--- Initializing Sphere ---" << std::endl;
+    std::cout << "Domain: X[" << m_dXStart << ", " << m_dXEnd << "] Y[" << m_dYStart << ", " << m_dYEnd << "]" << std::endl;
+    std::cout << "Sphere: Center(" << l_dCenterX << ", " << l_dCenterY << ") Radius: " << l_dRadius << std::endl;
+
+    for (int j = 0; j < vec_dU.size(); j++)
+    {
+        for (int i = 0; i < vec_dU[j].size(); i++)
+        {
+            // Calculate Physical Coordinates
+            // Note: Indices match Evolve() logic
+            double x = m_dXStart + (i - l_iGhostOffset) * m_dDeltaX + 0.5 * m_dDeltaX;
+            double y = m_dYStart + (j - l_iGhostOffset) * m_dDeltaY + 0.5 * m_dDeltaY;
+
+            // Distance Check
+            double l_dDistSq = (x - l_dCenterX)*(x - l_dCenterX) + (y - l_dCenterY)*(y - l_dCenterY);
+
+            vec4& l_vec4ConservedVars = vec_dU[j][i];
+
+            if (l_dDistSq <= l_dRadiusSq)
+            {
+                // INSIDE
+                l_vec4ConservedVars[0] = l_dInDensity;
+                l_vec4ConservedVars[1] = 0.0;
+                l_vec4ConservedVars[2] = 0.0;
+                l_vec4ConservedVars[3] = l_dInEnergy;
+                l_iCellsInitialized++;
+            }
+            else
+            {
+                // OUTSIDE
+                l_vec4ConservedVars[0] = l_dOutDensity;
+                l_vec4ConservedVars[1] = 0.0;
+                l_vec4ConservedVars[2] = 0.0;
+                l_vec4ConservedVars[3] = l_dOutEnergy;
+            }
+        }
+    }
+    
+    std::cout << "Cells inside sphere: " << l_iCellsInitialized << std::endl;
+    
+    if (l_iCellsInitialized == 0)
+    {
+        std::cerr << "ERROR: Sphere radius is too small or coordinates are misaligned. No cells were initialized inside!" << std::endl;
+    }
 }

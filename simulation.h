@@ -52,7 +52,8 @@ class Simulation
                     TORO_INIT_THREE = 7,
                     TORO_INIT_FOUR = 8,
                     TORO_INIT_FIVE = 9,
-                    SINE_WAVE = 10
+                    SINE_WAVE = 10,
+                    SPHERE_BLAST = 11,
                 };
                 
             enum class SlopeLimiter
@@ -133,6 +134,7 @@ class Simulation
             void ToroInitialFour(std::vector<std::vector<vec4>>& vec_dU);
             void ToroInitialFive(std::vector<std::vector<vec4>>& vec_dU);
             void InitialSineWave(std::vector<std::vector<vec4>>& vec_dU);
+            void InitialSphere(std::vector<std::vector<vec4>>& vec_dU);
             void SetInitialCondition();
     
             vec4 m_SL_Superbee(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right);

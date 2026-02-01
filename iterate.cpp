@@ -100,27 +100,8 @@ void Simulation::Evolve()
         SetLimitingFunction();
         SetBoundaryConditions();
         SetTimeStep();
-        
-        for (int j = ghost; j < m_iYNumPoints + ghost; j++)
-            {
-                for (int i = ghost; i < m_iXNumPoints + ghost; i++)
-                {
-                    double x = m_dXStart + (i - ghost) * m_dDeltaX + 0.5 * m_dDeltaX;  // Cell center
-                    double y = m_dYStart + (j - ghost) * m_dDeltaY + 0.5 * m_dDeltaY;  // Cell center
-                    
-                    vec4 U = m_vec_dU[j][i];
-                    
-                    outputFile << timestep << ","
-                            << t << ","
-                            << x << ","
-                            << y << ","
-                            << U[0] << ","  // density
-                            << U[1] << ","  // x-momentum
-                            << U[2] << ","  // y-momentum
-                            << U[3]         // energy
-                            << std::endl;
-                }
-            }
+
+        OutputToFile(outputFile, timestep, t);
             
         do
             {
@@ -157,26 +138,7 @@ void Simulation::Evolve()
                 
                 m_vec_dU = m_vec_dUNext;
                     
-                for (int j = ghost; j < m_iYNumPoints + ghost; j++)
-                    {
-                        for (int i = ghost; i < m_iXNumPoints + ghost; i++)
-                        {
-                            double x = m_dXStart + (i - ghost) * m_dDeltaX + 0.5 * m_dDeltaX;
-                            double y = m_dYStart + (j - ghost) * m_dDeltaY + 0.5 * m_dDeltaY;
-                            
-                            vec4 U = m_vec_dU[j][i];
-                            
-                            outputFile << timestep << ","
-                                    << t << ","
-                                    << x << ","
-                                    << y << ","
-                                    << U[0] << ","  // density
-                                    << U[1] << ","  // x-momentum
-                                    << U[2] << ","  // y-momentum
-                                    << U[3]         // energy
-                                    << std::endl;
-                        }
-                    }
+                OutputToFile(outputFile, timestep, t);
                 
                 std::cout << "Time: " << t << " / " << m_dTimeEnd << "\n";
                 

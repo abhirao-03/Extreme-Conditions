@@ -61,7 +61,7 @@ vec4 Simulation::m_vYFlux(const vec4& f_vec4_U)
         double& h_dYVelocity = h_dPrimitve[2];
         double& h_dPressure  = h_dPrimitve[3];
         
-        double h_dFirstTerm  = h_dDensity*h_dXVelocity;
+        double h_dFirstTerm  = h_dDensity*h_dYVelocity;
         double h_dSecondTerm = h_dDensity*h_dXVelocity*h_dYVelocity;
         double h_dThirdTerm  = h_dDensity*h_dYVelocity*h_dYVelocity + h_dPressure;
         double h_dFourthTerm = (h_dEnergy + h_dPressure)*h_dYVelocity ;
@@ -123,7 +123,7 @@ void Simulation::OutputToFile(std::ofstream& outputFile, const int& timestep, co
                                 << U[1] << ","  // x-momentum
                                 << U[2] << ","  // y-momentum
                                 << U[3]         // energy
-                                << std::endl;
+                                << "\n";
                     }
             }
     }
