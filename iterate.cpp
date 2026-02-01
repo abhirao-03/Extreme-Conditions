@@ -19,7 +19,7 @@ void Simulation::SetTimeStep()
 
                         double l_dSoundSpeed = std::sqrt(m_dGamma * l_dPressure / l_dDensity);
 
-                        double l_dCurrentMax = std::abs(std::max(l_dXVelocity, l_dYVelocity)) + l_dSoundSpeed;
+                        double l_dCurrentMax = std::max(std::abs(l_dXVelocity), std::abs(l_dYVelocity)) + l_dSoundSpeed;
 
                         if (l_dCurrentMax > f_dMaxInformationSpeed)
                             {
@@ -139,6 +139,8 @@ void Simulation::Evolve()
                                 m_vec_dUNext[j][i] = m_vec_dU[j][i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[j][i] - m_vec_dFluxesReconstructed[j][i-1]);
                             }
                     }
+
+                m_vec_dU = m_vec_dUNext;
                 
                 SetBoundaryConditions();
                 
@@ -152,6 +154,8 @@ void Simulation::Evolve()
                                 m_vec_dUNext[j][i] = m_vec_dU[j][i] - (m_dDeltaT / m_dDeltaX) * (m_vec_dFluxesReconstructed[j][i] - m_vec_dFluxesReconstructed[j - 1][i]);
                             }
                     }
+                
+                m_vec_dU = m_vec_dUNext;
                     
                 for (int j = ghost; j < m_iYNumPoints + ghost; j++)
                     {
@@ -175,8 +179,6 @@ void Simulation::Evolve()
                     }
                 
                 std::cout << "Time: " << t << " / " << m_dTimeEnd << "\n";
-
-                m_vec_dU = m_vec_dUNext;
                 
                 SetTimeStep();
 

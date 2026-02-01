@@ -3,3 +3,4 @@
 *.h.pch
 *.out
 *.o
+*.csv

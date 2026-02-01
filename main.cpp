@@ -14,8 +14,8 @@ int main(){
     double u_dRELAXATION = 0.8;
     double u_dGAMMA = 1.4;
 
-    int u_iXNUMPOINTS = 200;
-    int u_iYNUMPOINTS = 1;
+    int u_iXNUMPOINTS = 100;
+    int u_iYNUMPOINTS = 100;
     int u_iNUMGHOST = 2;
 
     int u_iInitialCondition;
