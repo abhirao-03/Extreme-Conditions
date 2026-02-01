@@ -51,36 +51,36 @@ vec4 Simulation::m_GetSlopeLimitingR(const vec4& U_Left, const vec4& U_Center, c
 
     }
 
-vec4 Simulation::m_SL_Superbee(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right)
-    {
-        vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(U_Left, U_Center, U_Right);
+// vec4 Simulation::m_SL_Superbee(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right)
+//     {
+//         vec4 l_dSlopeLimitingR = m_GetSlopeLimitingR(U_Left, U_Center, U_Right);
         
-        vec4 l_vResults = vec4();
+//         vec4 l_vResults = vec4();
     
-        for (int i = 0; i < l_dSlopeLimitingR.size(); i++)
-            {
-                double r = l_dSlopeLimitingR[i];
+//         for (int i = 0; i < l_dSlopeLimitingR.size(); i++)
+//             {
+//                 double r = l_dSlopeLimitingR[i];
         
-                if (r <= 0.0)
-                    {
-                        l_vResults[i] = 0.0;
-                    }
-                else if (r <= 0.5)
-                    {
-                        l_vResults[i] = 2.0 * r;
-                    }
-                else if (r <= 1.0)
-                    {
-                        l_vResults[i] = 1.0;
-                    }
-                else
-                    {
-                        l_vResults[i] = std::min(r, 2.0);
-                    }
-            }
+//                 if (r <= 0.0)
+//                     {
+//                         l_vResults[i] = 0.0;
+//                     }
+//                 else if (r <= 0.5)
+//                     {
+//                         l_vResults[i] = 2.0 * r;
+//                     }
+//                 else if (r <= 1.0)
+//                     {
+//                         l_vResults[i] = 1.0;
+//                     }
+//                 else
+//                     {
+//                         l_vResults[i] = std::min(r, 2.0);
+//                     }
+//             }
     
-        return l_vResults;
-    }
+//         return l_vResults;
+//     }
     
 vec4 Simulation::m_SL_VanLeer(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right)
     {
