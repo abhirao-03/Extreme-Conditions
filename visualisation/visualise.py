@@ -9,7 +9,7 @@ import sys
 
 # Configuration
 INPUT_FILE = './simulation_output.csv'
-OUTPUT_VIDEO = './simulation.mp4'
+OUTPUT_VIDEO = './simulation.gif'
 VAR_TO_PLOT = 'density'  # Options: density, x_momentum, y_momentum, energy, pressure, velocity
 FPS = 30
 
