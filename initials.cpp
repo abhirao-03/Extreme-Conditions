@@ -1,7 +1,7 @@
 #include "simulation.h"
 static const double PI = 4*atan(1);
 
-void Simulation::SetInitialCondition()
+void Simulation::m_SetInitialCondition()
     {
         switch (m_eInitialCondition)
             {

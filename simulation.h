@@ -135,7 +135,7 @@ class Simulation
             void ToroInitialFive(std::vector<std::vector<vec4>>& vec_dU);
             void InitialSineWave(std::vector<std::vector<vec4>>& vec_dU);
             void InitialSphere(std::vector<std::vector<vec4>>& vec_dU);
-            void SetInitialCondition();
+            void m_SetInitialCondition();
     
             vec4 m_SL_Superbee(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right);
             vec4 m_SL_VanLeer(const vec4& U_Left, const vec4& U_Center, const vec4& U_Right);
@@ -146,7 +146,7 @@ class Simulation
             void m_ReconstructData(int f_iDirection);
             void m_GetReconstructedFluxes(int f_iDirection);
             void m_EvolveHalfTimeStep(int f_iDirection);
-            void SetLimitingFunction();
+            void m_SetLimitingFunction();
             
             double m_GetEnergy(const vec4& f_vec4_P);
             vec4 m_GetPrimitives(const vec4& f_vec4_U);
@@ -154,8 +154,10 @@ class Simulation
             vec4 m_vXFlux(const vec4& f_vec4_U);
             vec4 m_vYFlux(const vec4& f_vec4_U);
             
-            void OutputToFile(std::ofstream& outputFile, const int& timestep, const double& time);
-            void SetBoundaryConditions();
-            void SetTimeStep();
-            void Evolve();
+            void m_BilinearInterpolation(const std::vector<std::vector<vec4>>& f_vec4Grid, const double& f_dXPosition, const double& f_dYPosition);
+            void m_OutputToFile(std::ofstream& outputFile, const int& timestep, const double& time);
+            
+            void m_SetBoundaryConditions();
+            void m_SetTimeStep();
+            void m_Evolve();
 };
