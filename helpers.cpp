@@ -24,4 +24,3 @@ void Simulation::m_OutputToFile(std::ofstream& outputFile, const int& timestep, 
             }
     }
 
-void Simualtion::m_BilinearInterpolation();

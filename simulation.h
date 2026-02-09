@@ -154,7 +154,6 @@ class Simulation
             vec4 m_vXFlux(const vec4& f_vec4_U);
             vec4 m_vYFlux(const vec4& f_vec4_U);
             
-            void m_BilinearInterpolation(const std::vector<std::vector<vec4>>& f_vec4Grid, const double& f_dXPosition, const double& f_dYPosition);
             void m_OutputToFile(std::ofstream& outputFile, const int& timestep, const double& time);
             
             void m_SetBoundaryConditions();
